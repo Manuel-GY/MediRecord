@@ -78,7 +78,6 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     implementation("com.google.android.gms:play-services-ads:23.1.0")
-    implementation("com.android.billingclient:billing-ktx:6.1.0")
 
     implementation("androidx.media:media:1.7.0")
 

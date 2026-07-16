@@ -1,7 +1,6 @@
 package com.medirecord.ui.screens.settings
 
 import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,7 +14,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medirecord.MediRecordApp
 import com.medirecord.util.AdManager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,9 +23,6 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
-    val app = context.applicationContext as MediRecordApp
-    val billingManager = app.billingManager
-    val isPremium by billingManager.isPremium.collectAsState()
 
     Scaffold(
         topBar = {
@@ -62,10 +57,7 @@ fun SettingsScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (isPremium)
-                        MaterialTheme.colorScheme.primaryContainer
-                    else
-                        MaterialTheme.colorScheme.surface
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             ) {
                 Column(
@@ -75,7 +67,7 @@ fun SettingsScreen(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.Star,
+                            imageVector = Icons.Default.CardGiftcard,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
@@ -83,70 +75,39 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "MediRecord Premium",
+                                text = "MediRecord es GRATIS",
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = if (isPremium) "Versión premium activa" else "Elimina los anuncios",
+                                text = "Gracias por usarnos",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "La app es gratuita y se financia con anuncios. Si ves un anuncio, nos estás ayudando a seguir mejorando.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    if (!isPremium) {
-                        BenefitItem("Elimina todos los anuncios")
-                        BenefitItem("Soporte prioritario")
-                        BenefitItem("Funciones futuras premium")
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = {
-                                activity?.let {
-                                    billingManager.launchPremiumPurchase(it)
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            Icon(Icons.Default.ShoppingCart, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Comprar Premium - $2.99 USD", fontWeight = FontWeight.Bold)
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        OutlinedButton(
-                            onClick = {
-                                activity?.let {
-                                    AdManager.showRewardedAd(it) { }
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(Icons.Default.VideoLibrary, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Ver anuncio para 1 hora sin ads")
-                        }
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(48.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "¡Gracias por ser premium!",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium
-                        )
+                    OutlinedButton(
+                        onClick = {
+                            activity?.let {
+                                AdManager.showRewardedAd(it) { }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.VideoLibrary, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Ver anuncio para apoyarnos")
                     }
                 }
             }
@@ -164,18 +125,6 @@ fun SettingsScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun BenefitItem(text: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = text, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
